@@ -29,6 +29,9 @@ vim.opt.termguicolors = true
 -- line length guide
 vim.opt.textwidth = 80
 vim.opt.colorcolumn = "80" -- if text goes beyond 80, not make a new line
+-- for accurate colors
+vim.opt.termguicolors = true
+
 
 local lazy_config = require "custom.configs.lazy"
 

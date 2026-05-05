@@ -82,12 +82,24 @@ return {
   },
   -- test new blink
   -- { import = "nvchad.blink.lazyspec" },
-
   {
   	"nvim-treesitter/nvim-treesitter",
   	opts = require "custom.configs.treesitter",
     vim.filetype.add({
       extension = { qml = "qmljs" }
     })
+  },
+  {
+    "brenoprata10/nvim-highlight-colors",
+    event = { "BufReadPre", "BufNewFile" }, -- lazy-load for performance
+    config = function()
+      require("nvim-highlight-colors").setup(require "custom.configs.highlightcolor")
+    end,
+  },
+  {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {} -- uses defaults, which are already great
   },
 }
