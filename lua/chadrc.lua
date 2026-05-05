@@ -6,7 +6,11 @@
 local M = {}
 
 M.base46 = {
-	theme = "onedark",
+	theme = "everblush",
+    hl_override = {
+        Comment = { italic = true },
+        ["@comment"] =  { italic = true },
+    },
 
 	-- hl_override = {
 	-- 	Comment = { italic = true },
