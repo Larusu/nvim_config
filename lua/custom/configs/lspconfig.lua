@@ -16,8 +16,8 @@ local servers = {
   "eslint",
   "pyright",
   "ruff",
-  "lua_ls",       -- for hyprland
-  "qmlls"         -- for quickshell or qml
+  "lua_ls", -- for hyprland
+  -- "qmlls"         -- for quickshell or qml
 }
 
 -- Setup servers using the new API
@@ -41,25 +41,6 @@ vim.lsp.config("pyright", {
         diagnosticMode = "workspace",
         -- Optional but useful
         autoImportCompletions = true,
-      }
-    }
-  }
-})
-
-vim.lsp.config("lua_ls", {
-  capabilities = nvlsp.capabilities,
-  on_attach = on_attach,
-  settings = {
-    Lua = {
-      runtime = { version = 'LuaJIT' },
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          vim.env.VIMRUNTIME,
-        },
-      },
-      diagnostics = {
-        globals = { 'vim' },  -- the Hyprland global
       },
     },
   },

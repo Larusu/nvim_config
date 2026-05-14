@@ -18,6 +18,7 @@ local options = {
     cpp = { "clang-format" },
     c = { "clang-format" },
     java = { "google-java-format" },
+    cs = { "csharpier" },
   },
 
   format_on_save = function(bufnr)

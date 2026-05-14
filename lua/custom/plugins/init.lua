@@ -14,11 +14,11 @@ return {
   },
   {
     "ThePrimeagen/vim-be-good",
-    cmd = "VimBeGood"
+    cmd = "VimBeGood",
   },
   {
-    'mcauley-penney/visual-whitespace.nvim',
-    opts = require 'custom.configs.whitespace',
+    "mcauley-penney/visual-whitespace.nvim",
+    opts = require "custom.configs.whitespace",
     keys = {
       {
         "<leader>tw",
@@ -27,7 +27,7 @@ return {
         end,
         mode = { "n", "v" },
         desc = "Toggle whitespace",
-      }
+      },
     },
     event = "ModeChanged", -- optionally, lazy load on entering visual mode
   },
@@ -44,7 +44,7 @@ return {
       view = {
         side = "right",
         width = 32,
-      }
+      },
     },
   },
   {
@@ -57,7 +57,7 @@ return {
       "L3MON4D3/LuaSnip",
     },
     config = function()
-      require "custom.configs.cmp"  -- You'll need to create this file
+      require "custom.configs.cmp" -- You'll need to create this file
     end,
   },
   {
@@ -74,20 +74,20 @@ return {
     init = function()
       vim.g.VM_mouse_mappings = 1
       vim.g.VM_maps = {
-        ['Find Under']         = '<C-d>',
-        ['Find Subword Under'] = '<C-d>',
-        ["Select All"]         = "<C-S-d>",
+        ["Find Under"] = "<C-d>",
+        ["Find Subword Under"] = "<C-d>",
+        ["Select All"] = "<C-S-d>",
       }
     end,
   },
   -- test new blink
   -- { import = "nvchad.blink.lazyspec" },
   {
-  	"nvim-treesitter/nvim-treesitter",
-  	opts = require "custom.configs.treesitter",
-    vim.filetype.add({
-      extension = { qml = "qmljs" }
-    })
+    "nvim-treesitter/nvim-treesitter",
+    opts = require "custom.configs.treesitter",
+    vim.filetype.add {
+      extension = { qml = "qmljs" },
+    },
   },
   {
     "brenoprata10/nvim-highlight-colors",
@@ -100,6 +100,20 @@ return {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     event = { "BufReadPre", "BufNewFile" },
-    opts = {} -- uses defaults, which are already great
+    opts = {}, -- uses defaults, which are already great
+  },
+  {
+    -- for CSharp
+    "seblj/roslyn.nvim",
+    ft = "cs", -- only loads when opening a .cs file
+    config = function()
+      local nvlsp = require "nvchad.configs.lspconfig"
+      require("roslyn").setup {
+        config = {
+          capabilities = nvlsp.capabilities,
+          on_attach = nvlsp.on_attach,
+        },
+      }
+    end,
   },
 }
