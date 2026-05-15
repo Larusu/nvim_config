@@ -65,8 +65,29 @@ return {
     lazy = false, -- WakaTime should always run to track your time
   },
   {
+    "3rd/image.nvim",
+    build = false, -- no need to build
+    opts = {
+      backend = "kitty",
+      processor = "magick_cli",
+      integrations = {},
+      max_width = 100,
+      max_height = 30,
+      max_height_window_percentage = math.huge,
+      max_width_window_percentage = math.huge,
+      window_overlap_clear_enabled = true,
+      window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+    },
+  },
+  {
     "nvim-telescope/telescope.nvim",
-    opts = require "custom.configs.telescope",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "3rd/image.nvim",  -- for image rendering
+    },
+    config = function()
+      require("telescope").setup(require("custom.configs.telescope"))
+    end,
   },
   {
     "mg979/vim-visual-multi",
