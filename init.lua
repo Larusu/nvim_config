@@ -27,7 +27,7 @@ vim.opt.relativenumber = true
 vim.opt.scrolloff = 12
 vim.opt.termguicolors = true
 -- line length guide
-vim.opt.textwidth = 80
+vim.opt.textwidth = 0
 vim.opt.colorcolumn = "80" -- if text goes beyond 80, not make a new line
 -- for accurate colors
 vim.opt.termguicolors = true
