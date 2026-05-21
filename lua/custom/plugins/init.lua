@@ -128,11 +128,31 @@ return {
     "seblj/roslyn.nvim",
     ft = "cs", -- only loads when opening a .cs file
     config = function()
-      local nvlsp = require "nvchad.configs.lspconfig"
+      local nvlsp = require "custom.configs.lspconfig"
       require("roslyn").setup {
         config = {
           capabilities = nvlsp.capabilities,
           on_attach = nvlsp.on_attach,
+        },
+      }
+    end,
+  },
+  -- NOTE: Both flutter-tools and roslyn.nvim manage their own LSP lifecycle internally. 
+  -- Adding dartls to servers would cause two conflicting LSP instances to attach 
+  -- to your Dart buffers.
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = function()
+      local nvlsp = require "custom.configs.lspconfig"
+      require("flutter-tools").setup {
+        lsp = {
+          on_attach = nvlsp.on_attach,
+          capabilities = nvlsp.capabilities,
         },
       }
     end,

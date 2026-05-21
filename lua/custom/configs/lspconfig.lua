@@ -47,3 +47,8 @@ vim.lsp.config("pyright", {
 })
 
 vim.lsp.enable(servers)
+
+return {
+  on_attach = on_attach,
+  capabilities = nvlsp.capabilities,
+}
