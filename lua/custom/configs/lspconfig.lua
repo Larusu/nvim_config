@@ -17,7 +17,7 @@ local servers = {
   "pyright",
   "ruff",
   "lua_ls", -- for hyprland
-  -- "qmlls"         -- for quickshell or qml
+  "qmlls"         -- for quickshell or qml
 }
 
 -- Setup servers using the new API
@@ -42,6 +42,19 @@ vim.lsp.config("pyright", {
         -- Optional but useful
         autoImportCompletions = true,
       },
+    },
+  },
+})
+
+vim.lsp.config("qmlls", {
+  capabilities = nvlsp.capabilities,
+  on_attach = on_attach,
+  cmd = { "/usr/lib/qt6/bin/qmlls" },
+  filetypes = { "qml", "qmljs" },
+  root_markers = { "CMakeLists.txt", "*.pro", ".git" },
+  settings = {
+    qmlls = {
+      buildDir = vim.fn.getcwd() .. "/build",  -- adjust to your build dir
     },
   },
 })
