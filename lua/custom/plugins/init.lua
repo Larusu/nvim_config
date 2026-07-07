@@ -157,4 +157,15 @@ return {
       }
     end,
   },
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
+    config = function()
+      require("diffview").setup(require "custom.configs.gitdiffview")
+    end,
+  },
+  {
+    "tpope/vim-fugitive",
+    cmd = { "Git", "G", "Gdiffsplit", "Gwrite", "Gread", "Gvdiffsplit" },
+  },
 }
