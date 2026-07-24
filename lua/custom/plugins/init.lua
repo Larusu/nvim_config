@@ -8,6 +8,11 @@ return {
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
+    -- Load BEFORE the file is read so nvim-lspconfig's `lsp/<server>.lua` base
+    -- configs (which provide each server's `cmd`) are on the runtimepath before
+    -- `vim.lsp.enable()` resolves them. Loading later (e.g. on "User FilePost")
+    -- resolves every server with `cmd = nil` and nothing attaches.
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require "custom.configs.lspconfig"
     end,
@@ -122,6 +127,31 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     event = { "BufReadPre", "BufNewFile" },
     opts = {}, -- uses defaults, which are already great
+  },
+  {
+    -- for Java: manages the jdtls server (install it with :MasonInstall jdtls)
+    "mfussenegger/nvim-jdtls",
+    ft = "java",
+    config = function()
+      local jdtls_cfg = require "custom.configs.jdtls"
+      -- Start jdtls for every Java buffer (each project gets its own workspace).
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "java",
+        callback = jdtls_cfg.start,
+      })
+      -- The buffer that triggered this ft-load already fired FileType, so start now.
+      jdtls_cfg.start()
+    end,
+  },
+  {
+    -- Spring Boot support (bean nav, application.properties/yml completion).
+    -- Provides jdtls extension jars consumed in custom/configs/jdtls.lua.
+    -- Needs the server jars: :MasonInstall vscode-spring-boot-tools
+    -- (NOT "spring-boot-tools" — that name only exists in nvim-java's registry)
+    "JavaHello/spring-boot.nvim",
+    ft = { "java", "yaml", "jproperties" },
+    dependencies = { "mfussenegger/nvim-jdtls" },
+    opts = {},
   },
   {
     -- for CSharp

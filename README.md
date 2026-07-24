@@ -15,6 +15,11 @@ This README is a setup guide for getting the config running on a **new machine**
 
 Everything I customize is under `lua/custom/` so NvChad itself stays untouched.
 
+> **Scaffolding a new project?** See [`docs/frameworks.md`](docs/frameworks.md) for
+> ready-to-run commands to create framework projects (FastAPI, Spring Boot, Laravel,
+> React, .NET, Rust/Axum, Go/Gin, Flutter, CMake, ...) that this config's LSPs
+> recognize out of the box.
+
 ```
 lua/
 ├── chadrc.lua              # NvChad theme/UI overrides (theme = "aquarium")
@@ -68,12 +73,38 @@ sudo pacman -S nodejs npm
 # Python
 sudo pacman -S python python-pip
 
+# C / C++ (clangd LSP + clang-format)
+sudo pacman -S clang
+
+# Rust (ships cargo + rustfmt)
+sudo pacman -S rust
+
+# Go (ships gofmt)
+sudo pacman -S go
+
+# Java (jdtls needs a JDK 21+; Spring Boot works out of the box)
+sudo pacman -S jdk-openjdk
+# jdtls itself: prefer the AUR package (fast) over Mason's slow Eclipse download
+yay -S jdtls              # provides a `jdtls` launcher on $PATH
+
 # C# (roslyn.nvim)
 sudo pacman -S dotnet-sdk
+
+# PHP / Laravel
+sudo pacman -S php composer
+# common Laravel extensions (add php-pgsql / php-intl as needed)
+sudo pacman -S php-gd php-sqlite
 
 # Flutter/Dart (flutter-tools.nvim) — via AUR or the official SDK
 # yay -S flutter
 ```
+
+> Bash, Markdown, YAML, TOML, Dockerfile and SQL support need no separate runtime —
+> their LSP servers/formatters are installed via Mason (see §4).
+>
+> **jdtls note:** the config (`lua/custom/configs/jdtls.lua`) auto-detects a system
+> `jdtls` on `$PATH` (from the AUR package) and only falls back to the Mason jar if
+> it's missing. Installing via `yay -S jdtls` avoids Mason's slow Eclipse download.
 
 ### Optional: image.nvim (inline images)
 
@@ -90,6 +121,46 @@ If you're not on Kitty, you can disable the `3rd/image.nvim` block in
 
 `wakatime/vim-wakatime` tracks coding time. On first launch it asks for an API key
 (stored in `~/.wakatime.cfg`). Remove the plugin if you don't want it.
+
+### Shell `PATH` (`~/.zshrc`)
+
+Neovim/Mason find their tools on their own, but add these so the same binaries
+(formatters, LSPs, `pint`, `prettier`, `sql-formatter`, `go install` tools, etc.)
+also work **from the terminal**. Appended (not prepended) so they don't shadow
+system tools like `clang-format`:
+
+```bash
+# ── Dev tooling on PATH ───────────────────────────────────────────────
+# Mason-installed LSP servers / formatters / linters
+export PATH="$PATH:$HOME/.local/share/nvim/mason/bin"
+
+# Go tools installed via `go install` (GOPATH = ~/go)
+export PATH="$PATH:$HOME/go/bin"
+
+# PHP Composer global bin — Laravel installer, global `pint`, etc.
+# (this dir appears after you install composer + a global package)
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
+
+# Rust tools installed via `cargo install` (dir appears on first install)
+export PATH="$PATH:$HOME/.cargo/bin"
+
+# Python user scripts (pip --user / pipx) — usually already on PATH
+export PATH="$PATH:$HOME/.local/bin"
+
+# .NET global tools (e.g. `dotnet tool install -g roslyn-language-server`)
+export PATH="$PATH:$HOME/.dotnet/tools"
+```
+
+Then reload the shell:
+
+```bash
+source ~/.zshrc
+```
+
+> **`pint` failed to install via Mason** because `composer` wasn't on `PATH`.
+> Install PHP tooling first (`sudo pacman -S php composer`), then either
+> `:MasonInstall pint` again, or (preferred for Laravel) add it per-project with
+> `composer require laravel/pint --dev` — conform will use `./vendor/bin/pint`.
 
 ---
 
@@ -137,10 +208,28 @@ Press `i` on a package to install, `X` to uninstall, `U` to update. Search with 
 
 ```
 html  cssls  tailwindcss  ts_ls  jsonls  eslint  pyright  ruff  lua_ls  qmlls
+clangd  rust_analyzer  gopls  bashls  marksman  dockerls  yamlls  taplo
+intelephense  sqls  postgres_lsp
 ```
 
-Plus, managed by their own plugins (not in the list above):
-- **roslyn** — C# (`seblj/roslyn.nvim`)
+Install all the Mason-managed ones in one shot:
+
+```
+:MasonInstall rust-analyzer gopls bash-language-server marksman dockerfile-language-server yaml-language-server taplo shfmt intelephense blade-formatter pint sqls postgres-language-server sql-formatter vscode-spring-boot-tools
+```
+
+Notes:
+- `clangd` comes from the system `clang` package.
+- `postgres_lsp` uses the Mason package **`postgres-language-server`** (formerly `postgrestools`).
+- `jdtls` (Java) is **not** in the list above — install it with `yay -S jdtls` (preferred) or `:MasonInstall jdtls`.
+
+Plus, managed by their own plugins (not in the server list above):
+- **jdtls** — Java, via `mfussenegger/nvim-jdtls` (+ `JavaHello/spring-boot.nvim` for Spring Boot)
+- **roslyn** — C# (`seblj/roslyn.nvim`). The server is **not** in Mason's core registry
+  as `roslyn` (that name lives in a custom registry). Install it one of these ways:
+  - Core Mason package (from nuget): `:MasonInstall roslyn-language-server`
+  - Or as a .NET global tool: `dotnet tool install -g roslyn-language-server --prerelease`
+    (then add `~/.dotnet/tools` to your `PATH` — see §2)
 - **dartls** — via `flutter-tools.nvim`
 
 **Formatters** (`lua/custom/configs/conform.lua`) — install via Mason or system:
@@ -153,6 +242,13 @@ Plus, managed by their own plugins (not in the list above):
 | C / C++         | `clang-format`       |
 | Java            | `google-java-format` |
 | C#              | `csharpier`          |
+| Rust            | `rustfmt`            |
+| Go              | `gofmt`              |
+| Bash / shell    | `shfmt`              |
+| TOML            | `taplo`              |
+| PHP             | `pint` (Laravel)     |
+| Blade           | `blade-formatter`    |
+| SQL             | `sql-formatter`      |
 
 ### B) System-wide (alternative)
 
@@ -309,6 +405,19 @@ Commit `lazy-lock.json` to pin exact plugin versions across machines.
 - **LSP not attaching** → `:LspInfo`, then install the server via `:Mason`.
 - **Images not rendering** → `image.nvim` needs Kitty + `imagemagick`; otherwise disable it.
 - **Everything broken after an update** → `:Lazy restore` to roll back to `lazy-lock.json`.
+- **Java LSP won't start** → needs a `jdtls` on `$PATH` (`yay -S jdtls`) or the Mason package,
+  plus JDK 21+ (you have OpenJDK). First launch is slow while it indexes the project.
+- **Spring Boot features missing** → install the server jars: `:MasonInstall vscode-spring-boot-tools`
+  (the bare `spring-boot-tools` name is **not** in the core registry).
+- **SQL completion is just keywords** → `sqls` only knows your schema once connected to a DB.
+  Add a `~/.config/sqls/config.yml` (or per-project `.sqls/config.yml`) with your connection.
+- **Postgres LSP not attaching** → the Mason package is `postgres-language-server` (renamed from
+  `postgrestools`); the config launches it as `postgres-language-server lsp-proxy`.
+- **No LSP attaches / `cmd … got nil` in `:LspLog`** → nvim-lspconfig must load *before*
+  files are read so its `lsp/<server>.lua` base configs (which provide each server's
+  `cmd`) are on the runtimepath when `vim.lsp.enable()` runs. Its plugin spec uses
+  `event = { "BufReadPre", "BufNewFile" }` for this. Loading it later (e.g. on
+  "User FilePost") resolves every server with `cmd = nil` and nothing attaches.
 - **General diagnosis** → `:checkhealth`.
 
 ---

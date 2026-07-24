@@ -19,6 +19,15 @@ local options = {
     c = { "clang-format" },
     java = { "google-java-format" },
     cs = { "csharpier" },
+    rust = { "rustfmt" },
+    go = { "gofmt" },
+    sh = { "shfmt" },
+    bash = { "shfmt" },
+    toml = { "taplo" },
+    php = { "pint" }, -- Laravel Pint (uses project ./vendor/bin/pint when present)
+    blade = { "blade-formatter" },
+    sql = { "sql_formatter" },
+    pgsql = { "sql_formatter" },
   },
 
   format_on_save = function(bufnr)
