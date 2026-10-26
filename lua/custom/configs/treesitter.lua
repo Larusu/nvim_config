@@ -18,7 +18,8 @@ local options = {
   },
   highlight = {
     enable = true,
-  }
+    disable = { "latex "}
+  },
 }
 
 return options

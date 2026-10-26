@@ -1,3 +1,7 @@
+local function shiftwidth(ctx)
+  return tostring(vim.bo[ctx.buf].shiftwidth)
+end
+
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
@@ -28,6 +32,26 @@ local options = {
     blade = { "blade-formatter" },
     sql = { "sql_formatter" },
     pgsql = { "sql_formatter" },
+  },
+
+  formatters = {
+    -- JS, TS, JSX/TSX, CSS, SCSS, JSON, YAML, HTML, Markdown, GraphQL, and Vue
+    prettier = {
+      prepend_args = function(_, ctx)
+        return { "--tab-width", shiftwidth(ctx) }
+      end,
+    },
+    ["clang-format"] = {
+      prepend_args = function(_, ctx)
+        local w = shiftwidth(ctx)
+        return {
+          "--style={BasedOnStyle: LLVM, IndentWidth: " .. w .. ", TabWidth: " .. w .. ", UseTab: Never}",
+        }
+      end,
+    },
+    ["google-java-format"] = {
+      prepend_args = { "--aosp" }, -- AOSP style = 4-space indent
+    },
   },
 
   format_on_save = function(bufnr)
