@@ -38,6 +38,7 @@
   "vim-fugitive": { "branch": "master", "commit": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0" },
   "vim-visual-multi": { "branch": "master", "commit": "a6975e7c1ee157615bbc80fc25e4392f71c344d4" },
   "vim-wakatime": { "branch": "master", "commit": "24495fb7cc9613eaf0ce45540fb8d096a30d08e9" },
+  "vimtex": { "branch": "master", "commit": "98615cefc441aaa5721c144ecfeacddcdf78816d" },
   "visual-whitespace.nvim": { "branch": "main", "commit": "49ff2b1c572ed7033a584381fa23aad2bf3bb258" },
   "volt": { "branch": "main", "commit": "620de1321f275ec9d80028c68d1b88b409c0c8b1" },
   "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" }

@@ -6,20 +6,19 @@ local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
   local repo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system { 
+  vim.fn.system {
     "git",
     "clone",
     "--filter=blob:none",
     repo,
     "--branch=stable",
-    lazypath 
+    lazypath,
   }
 end
 
 vim.opt.rtp:prepend(lazypath)
-vim.opt.rtp:prepend(lazypath)
 --indentation
-vim.opt.expandtab = true -- to allow <tab> 
+vim.opt.expandtab = true -- to allow <tab>
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 -- ui
@@ -29,9 +28,15 @@ vim.opt.termguicolors = true
 -- line length guide
 vim.opt.textwidth = 0
 vim.opt.colorcolumn = "80" -- if text goes beyond 80, not make a new line
--- for accurate colors
-vim.opt.termguicolors = true
+vim.opt.termguicolors = true -- for accurate colors
+-- for latex
+vim.g.maplocalleader = "," -- for VimTeX mappings
 
+vim.filetype.add {
+  extension = {
+    axaml = "xml", -- C# Avalonia UI: .axaml -> xml :P
+  },
+}
 
 local lazy_config = require "custom.configs.lazy"
 
