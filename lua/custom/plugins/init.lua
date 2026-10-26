@@ -1,10 +1,12 @@
+vim.filetype.add {
+  extension = { qml = "qmljs" },
+}
 return {
   {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "custom.configs.conform",
   },
-
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
@@ -88,10 +90,10 @@ return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "3rd/image.nvim",  -- for image rendering
+      "3rd/image.nvim", -- for image rendering
     },
     config = function()
-      require("telescope").setup(require("custom.configs.telescope"))
+      require("telescope").setup(require "custom.configs.telescopes")
     end,
   },
   {
@@ -111,9 +113,6 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     opts = require "custom.configs.treesitter",
-    vim.filetype.add {
-      extension = { qml = "qmljs" },
-    },
   },
   {
     "brenoprata10/nvim-highlight-colors",
@@ -167,15 +166,15 @@ return {
       }
     end,
   },
-  -- NOTE: Both flutter-tools and roslyn.nvim manage their own LSP lifecycle internally. 
-  -- Adding dartls to servers would cause two conflicting LSP instances to attach 
+  -- NOTE: Both flutter-tools and roslyn.nvim manage their own LSP lifecycle internally.
+  -- Adding dartls to servers would cause two conflicting LSP instances to attach
   -- to your Dart buffers.
   {
-    'nvim-flutter/flutter-tools.nvim',
+    "nvim-flutter/flutter-tools.nvim",
     lazy = false,
     dependencies = {
-        'nvim-lua/plenary.nvim',
-        'stevearc/dressing.nvim', -- optional for vim.ui.select
+      "nvim-lua/plenary.nvim",
+      "stevearc/dressing.nvim", -- optional for vim.ui.select
     },
     config = function()
       local nvlsp = require "custom.configs.lspconfig"
@@ -198,4 +197,13 @@ return {
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gwrite", "Gread", "Gvdiffsplit" },
   },
+  {
+    "lervag/vimtex",
+    lazy = false,     -- we don't want to lazy load VimTeX
+    -- tag = "v2.15", -- uncomment to pin to a specific release
+    init = function()
+      -- VimTeX configuration goes here, e.g.
+      require "custom.configs.vimtex"
+    end
+  }
 }
