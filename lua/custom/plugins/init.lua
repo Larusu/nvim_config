@@ -205,5 +205,6 @@ return {
       -- VimTeX configuration goes here, e.g.
       require "custom.configs.vimtex"
     end
-  }
+  },
+  { "tpope/vim-obsession" }
 }
