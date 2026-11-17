@@ -92,6 +92,17 @@ vim.lsp.config("postgres_lsp", {
   filetypes = { "sql" },
 })
 
+vim.lsp.config("ts_ls", {
+  capabilities = nvlsp.capabilities,
+  on_attach = on_attach,
+  settings = {
+    diagnostics = {
+      -- 80001: "File is a CommonJS module; it may be converted to an ES module."
+      ignoredCodes = { 80001 },
+    },
+  },
+})
+
 vim.lsp.enable(servers)
 
 return {
